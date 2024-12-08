@@ -12,7 +12,7 @@ import {LPFeeLibrary} from "v4-core/libraries/LPFeeLibrary.sol";
 import {PoolKey} from "v4-core/types/PoolKey.sol";
 import {Hooks} from "v4-core/libraries/Hooks.sol";
 import {PoolSwapTest} from "v4-core/test/PoolSwapTest.sol";
-import {GasPriceFeesHook} from "../src/GasPriceFeesHook.sol";
+import {FairLaunchHook} from "../src/FairLaunch.sol";
 import {TickMath} from "v4-core/libraries/TickMath.sol";
 import {console} from "forge-std/console.sol";
 import {LiquidityAmounts} from "@uniswap/v4-core/test/utils/LiquidityAmounts.sol";
@@ -22,7 +22,7 @@ contract TestFairLaunchHook is Test, Deployers {
     using CurrencyLibrary for Currency;
     using PoolIdLibrary for PoolKey;
 
-    GasPriceFeesHook hook;
+    FairLaunchHook hook;
 
     function setUp() public {
         // Deploy v4-core
@@ -53,12 +53,12 @@ contract TestFairLaunchHook is Test, Deployers {
         token0.mint(hookAddress, amountToMint0);
 
         deployCodeTo(
-            "GasPriceFeesHook.sol",
+            "FairLaunch.sol",
             abi.encode(manager, address(currency0Address)),
             hookAddress
         );
 
-        hook = GasPriceFeesHook(hookAddress);
+        hook = FairLaunchHook(hookAddress);
 
         // Initialize a pool
         (key, ) = initPool(
